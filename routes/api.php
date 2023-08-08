@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MarcasController;
 use App\Http\Controllers\Api\ModelosController;
 use App\Http\Controllers\Api\ProductosController;
+use App\Http\Controllers\Api\AccionesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('marcas',MarcasController::class);
 Route::apiResource('modelos', ModelosController::class);
 Route::apiResource('productos', ProductosController::class);
+Route::apiResource('acciones', AccionesController::class);
+Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
