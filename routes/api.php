@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\MarcasController;
 use App\Http\Controllers\Api\ModelosController;
 use App\Http\Controllers\Api\ProductosController;
 use App\Http\Controllers\Api\AccionesController;
-
+use App\Http\Controllers\Api\CategoriasController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,4 +26,5 @@ Route::apiResource('marcas',MarcasController::class);
 Route::apiResource('modelos', ModelosController::class);
 Route::apiResource('productos', ProductosController::class);
 Route::apiResource('acciones', AccionesController::class);
+Route::apiResource('categorias', CategoriasController::class);
 Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
