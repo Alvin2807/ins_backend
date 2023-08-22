@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ModelosController;
 use App\Http\Controllers\Api\ProductosController;
 use App\Http\Controllers\Api\AccionesController;
 use App\Http\Controllers\Api\CategoriasController;
+use App\Http\Controllers\Api\UsersController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,13 +19,16 @@ use App\Http\Controllers\Api\CategoriasController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+/* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+}); */
+Route::apiResource('login', UsersController::class);
+Route::middleware('auth:sanctum')->group(function(){
+    Route::apiResource('marcas',MarcasController::class);
+    Route::apiResource('modelos', ModelosController::class);
+    Route::apiResource('productos', ProductosController::class);
+    Route::apiResource('acciones', AccionesController::class);
+    Route::apiResource('categorias', CategoriasController::class);
+    Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
 });
 
-Route::apiResource('marcas',MarcasController::class);
-Route::apiResource('modelos', ModelosController::class);
-Route::apiResource('productos', ProductosController::class);
-Route::apiResource('acciones', AccionesController::class);
-Route::apiResource('categorias', CategoriasController::class);
-Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
