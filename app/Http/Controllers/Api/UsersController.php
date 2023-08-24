@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\Login\LoginRequest;
+use App\Http\Requests\Login\StoreRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +32,7 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(LoginRequest $request)
+    public function store(StoreRequest $request)
     {
         //Registrar usuarios
        try {
@@ -66,17 +67,40 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function login(User $user)
+    public function loginIniciar(LoginRequest $request)
     {
-        //
+        //Iniciar session
+        $data = $request->validated();
+
+        $user = User::where('usuario', $data['usuario'])->first();
+
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            return response()->json([
+                'message' => 'Usuario o contraseña incorrecta'
+            ], 401);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        $cookie = cookie('token', $token, 60 * 24); // 1 day
+
+        return response()->json([
+            'user' => new UserResource($user),
+            'token' =>$token
+        ])->withCookie($cookie);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
-    {
-        //
+    public function logout(Request $request) {
+        $request->user()->currentAccessToken()->delete();
+
+        $cookie = cookie()->forget('token');
+
+        return response()->json([
+            'message' => 'Logged out successfully!'
+        ])->withCookie($cookie);
     }
 
     /**

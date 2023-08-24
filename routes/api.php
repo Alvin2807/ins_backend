@@ -8,21 +8,12 @@ use App\Http\Controllers\Api\ProductosController;
 use App\Http\Controllers\Api\AccionesController;
 use App\Http\Controllers\Api\CategoriasController;
 use App\Http\Controllers\Api\UsersController;
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
-/* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-}); */
 Route::apiResource('login', UsersController::class);
+Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
+
+Route::middleware('auth:sanctum')->group(function (){
+});
 Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('marcas',MarcasController::class);
     Route::apiResource('modelos', ModelosController::class);
@@ -30,5 +21,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('acciones', AccionesController::class);
     Route::apiResource('categorias', CategoriasController::class);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
+    Route::post('logout', [UsersController::class,'logout']);
 });
 
