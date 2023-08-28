@@ -70,24 +70,37 @@ class UsersController extends Controller
     public function loginIniciar(LoginRequest $request)
     {
         //Iniciar session
-        $data = $request->validated();
+        try {
+           DB::beginTransaction();
+           $data = $request->validated();
+           $user = User::where('usuario', $data['usuario'])->first();
+   
+           if (!$user || !Hash::check($data['password'], $user->password)) {
+               return response()->json([
+                   'message' => 'Usuario o contraseña incorrecta'
+               ], 401);
+           }
+   
+           $token = $user->createToken('auth_token')->plainTextToken;
+           $cookie = cookie('token', $token, 60 * 24); // 1 day
+           DB::commit();
 
-        $user = User::where('usuario', $data['usuario'])->first();
-
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json([
-                'message' => 'Usuario o contraseña incorrecta'
-            ], 401);
-        }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        $cookie = cookie('token', $token, 60 * 24); // 1 day
-
-        return response()->json([
+           return response()->json([
             'user' => new UserResource($user),
-            'token' =>$token
+            'token' =>$token,
+            "exitoso" =>'Has ingresado satisfactoriamente'
         ])->withCookie($cookie);
+        } catch (\Exception $th) {
+           DB::rollBack();
+           return response()->json([
+            "ok" =>false,
+            "data" =>$th->getMessage(),
+            "error" =>'Hubo un error consulte con el administrador del sistema'
+           ]);
+        }
+       
+
+        
     }
 
     /**
@@ -99,7 +112,7 @@ class UsersController extends Controller
         $cookie = cookie()->forget('token');
 
         return response()->json([
-            'message' => 'Logged out successfully!'
+            'message' => 'Cerró sesión exitosamente!'
         ])->withCookie($cookie);
     }
 
