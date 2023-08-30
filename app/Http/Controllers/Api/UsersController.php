@@ -78,7 +78,7 @@ class UsersController extends Controller
            if (!$user || !Hash::check($data['password'], $user->password)) {
                return response()->json([
                    'message' => 'Usuario o contraseña incorrecta'
-               ], 401);
+               ]);
            }
    
            $token = $user->createToken('auth_token')->plainTextToken;
@@ -86,9 +86,10 @@ class UsersController extends Controller
            DB::commit();
 
            return response()->json([
-            'user' => new UserResource($user),
+            'data' => new UserResource($user),
             'token' =>$token,
-            "exitoso" =>'Has ingresado satisfactoriamente'
+            "exitoso" =>'Has ingresado satisfactoriamente',
+            "ok" =>true
         ])->withCookie($cookie);
         } catch (\Exception $th) {
            DB::rollBack();

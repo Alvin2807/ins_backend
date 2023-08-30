@@ -14,7 +14,7 @@ Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
 
 Route::middleware('auth:sanctum')->group(function (){
 });
-Route::middleware('auth:sanctum')->group(function(){
+//Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('marcas',MarcasController::class);
     Route::apiResource('modelos', ModelosController::class);
     Route::apiResource('productos', ProductosController::class);
@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('categorias', CategoriasController::class);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
     Route::post('logout', [UsersController::class,'logout']);
-});
+//});
 
