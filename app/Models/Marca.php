@@ -11,13 +11,15 @@ class Marca extends Model
     
     public    $table      = "ins_marcas";
     public    $primarykey = "id_marca";
-    protected $fillable = ['id_marca','nombre_marca'];
+    protected $fillable = ['id_marca','nombre_marca','usuario_crea'];
     public    $timestamps = false;
     public    $incrementing = true;
 
     protected $casts = [
         'id_marca' => 'integer',
-        'nombre_marca' => 'string'
+        'nombre_marca' => 'string',
+        'usuario_crea' =>'string',
+        'usuario_modifica' =>'string'
     ];
 
 

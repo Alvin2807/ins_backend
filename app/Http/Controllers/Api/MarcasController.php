@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Marca;
 use Illuminate\Http\Request;
+use App\Http\Requests\Marcas\StoreRequest;
+use Illuminate\Support\Facades\DB;
 class MarcasController extends Controller
 {
     /**
@@ -33,9 +35,38 @@ class MarcasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-       
+       try {
+        DB::beginTransaction();
+        $marca = strtoupper($request->input('nombre_marca'));
+        $consulta = Marca::
+        select('id_marca','nombre_marca')
+        ->where('nombre_marca', $marca)->count();
+        if ($consulta > 0) {
+           return response()->json([
+            "existe" =>'Ya existe una marca '.$marca
+           ]);
+        } else {
+            $marcas = new Marca();
+            $marcas->nombre_marca = $marca;
+            $marcas->usuario_crea = strtoupper($request->input('usuario'));
+            $marcas->save();
+            DB::commit();
+            return response()->json([
+                "ok" =>true,
+                "data" =>$marcas,
+                "exitoso" =>'Se guardo satisfactoriamente'
+            ]);
+        }
+       } catch (\Exception $error) {
+        DB::rollBack();
+        return response()->json([
+            "ok" =>false,
+            "data" =>$error->getMessage(),
+            "errorRegistro" =>'Hubo un error consulte con el Administrador del sistema'
+        ]);
+       }
       
     }
 
