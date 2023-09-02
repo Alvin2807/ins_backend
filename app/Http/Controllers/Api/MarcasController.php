@@ -17,6 +17,7 @@ class MarcasController extends Controller
         //Mostrar marcas
         $marcas = Marca::
         select('id_marca','nombre_marca')
+        ->orderby('id_marca', 'desc')
         ->get();
         return response()->json([
             "ok"   =>true,
