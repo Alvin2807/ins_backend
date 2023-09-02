@@ -3,26 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Modelo;
-use App\Models\VistaModelo;
+use App\Models\Colores;
 use Illuminate\Http\Request;
 
-
-class ModelosController extends Controller
+class ColoresController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //Mostrar modelos y marcas
-        $modelos = VistaModelo::
-        select('id_modelo','nombre_modelo','fk_marca','nombre_marca')
-        ->orderby('id_modelo','desc')
+        //Mostrar coores
+        $colores = Colores::select('id_color','color')
+        ->orderBy('id_color','asc')
         ->get();
         return response()->json([
-            "ok" => true,
-            "data" =>$modelos
+            "ok" =>true,
+            "data" =>$colores
         ]);
     }
 
@@ -39,15 +36,13 @@ class ModelosController extends Controller
      */
     public function store(Request $request)
     {
-        //Registrar Modelos
-     
-      
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Modelo $modelo)
+    public function show(Colores $colores)
     {
         //
     }
@@ -55,7 +50,7 @@ class ModelosController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Modelo $modelo)
+    public function edit(Colores $colores)
     {
         //
     }
@@ -63,7 +58,7 @@ class ModelosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Modelo $modelo)
+    public function update(Request $request, Colores $colores)
     {
         //
     }
@@ -71,7 +66,7 @@ class ModelosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Modelo $modelo)
+    public function destroy(Colores $colores)
     {
         //
     }

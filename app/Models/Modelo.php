@@ -10,15 +10,14 @@ class Modelo extends Model
     use HasFactory;
 
     public $table         = "ins_modelos";
-    public $primaryley    = "id_modelo";
-    protected $fillable   = ['id_modelo','nombre_modelo','fk_marca'];
+    public $primarykey    = "id_modelo";
+    protected $fillable   = ['id_modelo','nombre_modelo','fk_marca','usuario_crea','usuario_modifica'];
     public $incrementing  = true;
     public $timestamps    = false;
 
     protected $casts = [
-        'id_modelo' => 'integer',
+        'id_modelo'     => 'integer',
         'nombre_modelo' => 'string',
-        'fk_marca' => 'ineteger'
-
+        'fk_marca'      => 'integer',
     ];
 }
