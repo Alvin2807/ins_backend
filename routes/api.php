@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AccionesController;
 use App\Http\Controllers\Api\CategoriasController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\ColoresController;
+use App\Http\Controllers\Api\DepositosController;
 
 Route::apiResource('login', UsersController::class);
 Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('acciones', AccionesController::class);
     Route::apiResource('categorias', CategoriasController::class);
     Route::apiResource('colores', ColoresController::class);
+    Route::apiResource('depositos', DepositosController::class);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
     Route::post('logout', [UsersController::class,'logout']);
 //});
