@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\CategoriasController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\ColoresController;
 use App\Http\Controllers\Api\DepositosController;
+use App\Http\Controllers\Api\PisosController;
+use App\Http\Controllers\Api\LocalizacionesController;
 
 Route::apiResource('login', UsersController::class);
 Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
@@ -24,6 +26,8 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('categorias', CategoriasController::class);
     Route::apiResource('colores', ColoresController::class);
     Route::apiResource('depositos', DepositosController::class);
+    Route::apiResource('pisos', PisosController::class);
+    Route::apiResource('localizaciones', LocalizacionesController::class);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
     Route::post('logout', [UsersController::class,'logout']);
 //});

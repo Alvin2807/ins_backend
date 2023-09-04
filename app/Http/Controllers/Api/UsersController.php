@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Login\LoginRequest;
 use App\Http\Requests\Login\StoreRequest;
 use App\Http\Resources\UserResource;
+use App\Models\VistaUsuarios;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +19,12 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        //Mostrar usuarios
+        $usuarios = VistaUsuarios::all();
+        return response()->json([
+            "ok" =>true,
+            "data" =>$usuarios
+        ]);
     }
 
     /**
