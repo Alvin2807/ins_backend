@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ColoresController;
 use App\Http\Controllers\Api\DepositosController;
 use App\Http\Controllers\Api\PisosController;
 use App\Http\Controllers\Api\LocalizacionesController;
+use App\Http\Controllers\Api\UnidadesMedidasController;
 
 Route::apiResource('login', UsersController::class);
 Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('depositos', DepositosController::class);
     Route::apiResource('pisos', PisosController::class);
     Route::apiResource('localizaciones', LocalizacionesController::class);
+    Route::apiResource('unidades_de_medidas', UnidadesMedidasController::class);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
     Route::post('logout', [UsersController::class,'logout']);
 //});
