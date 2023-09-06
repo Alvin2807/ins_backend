@@ -19,6 +19,7 @@ class ProductosController extends Controller
         $producto = vistaProductos::
         select('id_producto','codigo_producto','producto','nombre_marca','nombre_modelo','color','estado','categoria',
         'stock')
+        ->orderBy('id_producto','desc')
         ->get();
         return response()->json([
             "ok" =>true,
@@ -61,7 +62,7 @@ class ProductosController extends Controller
                 $producto->fk_disposicion = $request->input('fk_disposicion');
                 $producto->fk_color = $request->input('fk_color');
                 $producto->stock = 0;
-                $producto->estado = 'No disponible';
+                $producto->estado = 'Agotado';
                 $producto->usuario_crea = strtoupper($request->input('usuario'));
                 $producto->save();
                 DB::commit();
