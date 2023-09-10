@@ -49,7 +49,6 @@ class ProductosController extends Controller
             ->where('codigo_producto', $codigo_producto)->count();
             if ($consulta > 0) {
                return response()->json([
-                "ok" =>true,
                 "existe" => 'Ya existe un producto con el código '.$codigo_producto
                ]);
             } else {
@@ -79,7 +78,7 @@ class ProductosController extends Controller
             return response()->json([
                 "ok" =>false,
                 "data" =>$error->getMessage(),
-                "error" => 'Hubo un error consulte con el Administrador del sistema '
+                "errorRegistro" => 'Hubo un error consulte con el Administrador del sistema '
             ]);
         }
     }

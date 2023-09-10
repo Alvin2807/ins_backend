@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Marca;
 use Illuminate\Http\Request;
 use App\Http\Requests\Marcas\StoreRequest;
+use App\Models\VistaModelo;
 use Illuminate\Support\Facades\DB;
 class MarcasController extends Controller
 {
@@ -74,9 +75,17 @@ class MarcasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Marca $marca)
+    public function mostrarModelosMarca($id_marca)
     {
-        //
+        //Mostrar modelos de una marca
+        $marca = VistaModelo::
+        select('id_modelo','nombre_modelo','fk_marca','nombre_marca')
+        ->where('fk_marca', $id_marca)
+        ->get();
+        return response()->json([
+            "ok" =>true,
+            "data"=>$marca
+        ]);
     }
 
     /**
