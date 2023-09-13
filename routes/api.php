@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('pisos', PisosController::class);
     Route::apiResource('localizaciones', LocalizacionesController::class);
     Route::apiResource('unidades_de_medidas', UnidadesMedidasController::class);
+    Route::get('acciones_pendientes', [AccionesController::class,'mostrarAccionesPendientes']);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
     Route::get('traer_modelos_por_marca/{fk_marca}', [MarcasController::class,'mostrarModelosMarca']);
     Route::post('logout', [UsersController::class,'logout']);

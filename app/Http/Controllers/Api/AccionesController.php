@@ -9,6 +9,7 @@ use App\Models\vista_detalles_acciones;
 use Illuminate\Http\Request;
 use App\Http\Requests\Acciones\StoreRequest;
 use App\Models\DetalleAciones;
+use App\Models\vistaAccionesPendientes;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -20,10 +21,7 @@ class AccionesController extends Controller
     public function index()
     {
         //Mostrar las solicitudes de acciones 
-        $acciones = vista_acciones::
-        select('id_accion','incidencia','fecha_incidencia','fecha_registro','entregado_por','estado','cantidad_total',
-        'tipo_accion','despacho')
-        ->get();
+        $acciones = vista_acciones::all();
         return response()->json([
             "ok" =>true,
             "data" =>$acciones
@@ -129,9 +127,16 @@ class AccionesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Acciones $acciones)
+    public function mostrarAccionesPendientes()
     {
-        //
+        //Mostrar todas las acciones pendientes por encabezado
+        $acciones = vistaAccionesPendientes::all();
+        return response()->json([
+            "ok" =>true,
+            "data" =>$acciones,
+            "total_acciones" =>$acciones->count()
+        ]);
+        
     }
 
     /**
