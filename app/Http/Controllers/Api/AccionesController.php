@@ -134,10 +134,22 @@ class AccionesController extends Controller
         return response()->json([
             "ok" =>true,
             "data" =>$acciones,
+        ]);
+        
+    }
+
+    public function contarAccionesPendientes()
+    {
+        //Mostrar todas las acciones pendientes por encabezado
+        $acciones = vistaAccionesPendientes::all();
+        return response()->json([
+            "ok" =>true,
+            "data" =>$acciones,
             "total_acciones" =>$acciones->count()
         ]);
         
     }
+
 
     /**
      * Update the specified resource in storage.
