@@ -9,9 +9,9 @@ class UnidadMedida extends Model
 {
     use HasFactory;
 
-    public    $table = "ins_disposicion";
-    public    $primarykey = "id_disposicion";
-    protected $fillable = ['id_disposicion','disposicion','usuario_crea','usuario_modifica'];
+    public    $table = "ins_unidades_medidas";
+    public    $primarykey = "id_unidad_medida";
+    protected $fillable = ['id_unidad_medida','unidad_medida','usuario_crea','usuario_modifica'];
     public    $incrementing = true;
     public    $timestamps = false;
 }

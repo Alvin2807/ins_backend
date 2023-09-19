@@ -11,7 +11,7 @@ class vistaAccionesPendientes extends Model
     public $table = "vista_acciones_pendientes";
     protected $fillable = ['id_accion','fk_tipo_accion','incidencia','fecha_incidencia','fecha_registro','fk_despacho','entregado_por',
     'estado','cantidad_total','comentario','num_entrada','num_salida','fecha_entrada','fecha_salida','fecha_confirmacion','tipo_accion',
-    'despacho'];
+    'despacho','fech_entrega','recibido_por'];
     protected $casts   = [
         'id_accion'          => 'integer',
         'fk_tipo_accion'     => 'integer',
@@ -28,8 +28,10 @@ class vistaAccionesPendientes extends Model
         'fecha_entrada'      =>'datetime:Y-m-d',
         'fecha_salida'       =>'datetime:Y-m-d',
         'fecha_confirmacion' =>'datetime:Y-m-d',
+        'fecha_entrga'       =>'datetime:Y-m-d',
         'tipo_accion'        =>'string',
-        'despacho'           =>'string'
+        'despacho'           =>'string',
+        'recibido_por'       =>'string'
 
     ];
 

@@ -17,8 +17,8 @@ class UnidadesMedidasController extends Controller
     {
         //Mostrar las unidades de medidas
         $unidadMedida = UnidadMedida::
-        select('id_disposicion','disposicion')
-        ->orderBy('id_disposicion','desc')
+        select('id_unidad_medida','unidad_medida')
+        ->orderBy('id_unidad_medida','desc')
         ->get();
         return response()->json([
             "ok" =>true,
@@ -44,8 +44,8 @@ class UnidadesMedidasController extends Controller
           DB::beginTransaction();
           $unidad_medida = strtoupper($request->input('unidad_medida'));
           $consulta = UnidadMedida::
-          select('id_disposicion','disposicion')
-          ->where('disposicion', $unidad_medida)->count();
+          select('id_unidad_medida','unidad_medida')
+          ->where('unidad_medida', $unidad_medida)->count();
           if ($consulta > 0) {
            return response()->json([
             "existe" =>'Ya existe la unidad de medida '.$unidad_medida
