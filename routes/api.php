@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CategoriasController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\ColoresController;
 use App\Http\Controllers\Api\DepositosController;
+use App\Http\Controllers\Api\DespachosController;
 use App\Http\Controllers\Api\PisosController;
 use App\Http\Controllers\Api\LocalizacionesController;
 use App\Http\Controllers\Api\UnidadesMedidasController;
@@ -31,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('localizaciones', LocalizacionesController::class);
     Route::apiResource('unidades_de_medidas', UnidadesMedidasController::class);
     Route::get('acciones_pendientes', [AccionesController::class,'mostrarAccionesPendientes']);
+    Route::get('despachos_disponibles_para_entrada',[DespachosController::class,'mostrarDespachosEntrada']);
+    Route::get('vista_productos_disponibles', [ProductosController::class,'vistaProductosDisponibles']);
     Route::get('contar_acciones_pendientes',[AccionesController::class,'contarAccionesPendientes']);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
     Route::get('traer_modelos_por_marca/{fk_marca}', [MarcasController::class,'mostrarModelosMarca']);

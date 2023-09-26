@@ -46,6 +46,7 @@ class UsersController extends Controller
         $user = new User();
         $user->name     = ucwords($request->input('name'));
         $user->usuario  = strtoupper($request->input('usuario'));
+        $user->fk_despacho = $request->input('fk_despacho');
         $user->email    = strtolower($request->input('email'));
         $user->password = Hash::make($request->input('password'));
         $user->save();

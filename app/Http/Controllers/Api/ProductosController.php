@@ -7,6 +7,7 @@ use App\Models\Producto;
 use App\Models\vistaProductos;
 use Illuminate\Http\Request;
 use App\Http\Requests\Productos\StoreRequest;
+use App\Models\vista_productos_disponibles;
 use Illuminate\Support\Facades\DB;
 class ProductosController extends Controller
 {
@@ -102,9 +103,16 @@ class ProductosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Producto $producto)
+    public function vistaProductosDisponibles()
     {
-        //
+        //Muestra los productos en estado disponibles y agotados para realizar una entrada
+        $producto = vista_productos_disponibles::
+        select('id_producto','codigo_producto','producto','nombre_marca','nombre_modelo','color','categoria')
+        ->get();
+        return response()->json([
+            "ok" =>true,
+            "data" =>$producto
+        ]);
     }
 
     /**
