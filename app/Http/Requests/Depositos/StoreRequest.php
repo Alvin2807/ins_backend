@@ -24,6 +24,7 @@ class StoreRequest extends FormRequest
         return [
             'usuario'     =>'required|string',
             'fk_despacho' =>'required|integer',
+            'fk_piso'     =>'required|integer',
             'deposito'    =>'required|string'
         ];
     }

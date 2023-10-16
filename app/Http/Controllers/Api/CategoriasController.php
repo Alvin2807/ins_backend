@@ -7,6 +7,8 @@ use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Categorias\StoreRequest;
+use App\Models\HistorialRegistroCategoria;
+use Carbon\Carbon;
 
 class CategoriasController extends Controller
 {

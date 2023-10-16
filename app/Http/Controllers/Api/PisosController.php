@@ -16,7 +16,7 @@ class PisosController extends Controller
         //Mostrar pisos
         $piso = Piso::
         select('id_piso','piso')
-        ->orderBy('id_piso','asc')
+        ->orderBy('id_piso','desc')
         ->get();
         return response()->json([
             "ok" =>true,

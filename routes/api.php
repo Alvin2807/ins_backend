@@ -18,8 +18,8 @@ use App\Http\Controllers\Api\UnidadesMedidasController;
 Route::apiResource('login', UsersController::class);
 Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
 
-Route::middleware('auth:sanctum')->group(function (){
-});
+/* Route::middleware('auth:sanctum')->group(function (){
+}); */
 //Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('marcas',MarcasController::class);
     Route::apiResource('modelos', ModelosController::class);
@@ -29,7 +29,6 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('colores', ColoresController::class);
     Route::apiResource('depositos', DepositosController::class);
     Route::apiResource('pisos', PisosController::class);
-    Route::apiResource('localizaciones', LocalizacionesController::class);
     Route::apiResource('unidades_de_medidas', UnidadesMedidasController::class);
     Route::get('acciones_pendientes', [AccionesController::class,'mostrarAccionesPendientes']);
     Route::get('despachos_disponibles_para_entrada',[DespachosController::class,'mostrarDespachosEntrada']);

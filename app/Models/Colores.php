@@ -15,8 +15,8 @@ class Colores extends Model
     public    $incrementing = true;
     public    $timestamps   = false;
 
-    protected $casts = [[
+    protected $casts = [
         'id_color' => 'integer',
         'color'    => 'string'
-    ]];
+    ];
 }

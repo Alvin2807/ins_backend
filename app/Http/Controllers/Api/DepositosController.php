@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Deposito;
 use Illuminate\Http\Request;
 use App\Http\Requests\Depositos\StoreRequest;
+use App\Models\HistorialRegistroDeposito;
+use App\Models\VistaDeposito;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DepositosController extends Controller
@@ -16,8 +19,8 @@ class DepositosController extends Controller
     public function index()
     {
         //Mostrar depositos
-        $deposito = Deposito::
-        select('id_deposito','deposito')
+        $deposito = VistaDeposito::
+        select('id_deposito','deposito','piso','fk_piso')
         ->orderBy('id_deposito','desc')
         ->get();
         return response()->json([
@@ -54,8 +57,10 @@ class DepositosController extends Controller
             $depositos = new Deposito();
             $depositos->fk_despacho  = $request->input('fk_despacho');
             $depositos->deposito     = strtoupper($request->input('deposito'));
+            $depositos->fk_piso      = strtoupper($request->input('fk_piso'));
             $depositos->usuario_crea = strtoupper($request->input('usuario'));
             $depositos->save();
+
             DB::commit();
             return response()->json([
                 "ok" =>true,

@@ -49,7 +49,7 @@ class UsersController extends Controller
         $user->fk_despacho = $request->input('fk_despacho');
         $user->email    = strtolower($request->input('email'));
         $user->password = Hash::make($request->input('password'));
-        $user->rol = strtoupper($request->input('rol'));
+        $user->fk_rol = strtoupper($request->input('fk_rol'));
         $user->save();
         $token = $user->createToken('auth_token')->plainTextToken;
         $cookie = cookie('token', $token, 60 * 24); // 1 day

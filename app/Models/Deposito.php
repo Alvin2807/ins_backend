@@ -11,13 +11,14 @@ class Deposito extends Model
 
     public    $table = "ins_depositos";
     public    $primarykey = "id_deposito";
-    protected $fillable = ['id_deposito','deposito','usuario_crea','usuario_modifica','fk_despacho'];
+    protected $fillable = ['id_deposito','deposito','usuario_crea','usuario_modifica','fk_despacho','fk_piso'];
     public    $incrementing = true;
     public    $timestamps = false;
 
     protected $casts = [
         'id_deposito'   =>'integer',
         'deposito'      =>'string',
-        'fk_despacho'   =>'integer'
+        'fk_despacho'   =>'integer',
+        'fk_piso'       =>'integer'
     ];
 }
