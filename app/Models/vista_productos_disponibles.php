@@ -10,16 +10,16 @@ class vista_productos_disponibles extends Model
     use HasFactory;
     public     $table = "vista_productos_disponibles";
     protected  $fillable = ['id_producto','codigo_producto','producto','categoria','nombre_marca',
-    'nombre_modelo','color','estado','stock'];
+    'unidad_medida','color','estado','stock'];
     protected  $casts = [
         'id_producto'     => 'integer',
         'codigo_producto' => 'string',
         'producto'        => 'string',
         'categoria'       =>'string',
         'nombre_marca'    =>'string',
-        'nombre_modelo'   =>'string',
         'color'           =>'string',
         'estado'          =>'string',
-        'stock'           =>'integer'
+        'stock'           =>'integer',
+        'unidad_medida'   =>'string'
     ];
 }

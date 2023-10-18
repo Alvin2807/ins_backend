@@ -18,7 +18,7 @@ class ProductosController extends Controller
     {
         //Mostrar productos
         $producto = vistaProductos::
-        select('id_producto','codigo_producto','producto','nombre_marca','nombre_modelo','color','estado','categoria',
+        select('id_producto','codigo_producto','producto','nombre_marca','color','estado','categoria',
         'stock')
         ->orderBy('id_producto','desc')
         ->get();
@@ -54,14 +54,13 @@ class ProductosController extends Controller
                ]);
             } else {
                 $producto = new Producto();
-                $producto->codigo_producto = $codigo_producto;
-                $producto->producto = strtoupper($request->input('producto'));
-                $producto->fk_categoria = $request->input('fk_categoria');
-                $producto->fk_marca = $request->input('fk_marca');
-                $producto->fk_modelo = $request->input('fk_modelo');
+                $producto->codigo_producto  = $codigo_producto;
+                $producto->producto         = strtoupper($request->input('producto'));
+                $producto->fk_categoria     = $request->input('fk_categoria');
+                $producto->fk_marca         = $request->input('fk_marca');
                 $producto->fk_unidad_medida = $request->input('fk_unidad_medida');
-                $producto->fk_color = $request->input('fk_color');
-                $producto->stock = 0;
+                $producto->fk_color         = $request->input('fk_color');
+                $producto->stock  = 0;
                 $producto->estado = 'Agotado';
                 $producto->usuario_crea = strtoupper($request->input('usuario'));
                 $producto->save();
@@ -107,7 +106,7 @@ class ProductosController extends Controller
     {
         //Muestra los productos en estado disponibles y agotados para realizar una entrada
         $producto = vista_productos_disponibles::
-        select('id_producto','codigo_producto','producto','nombre_marca','nombre_modelo','color','categoria')
+        select('id_producto','codigo_producto','producto','nombre_marca','unidad_medida','color','categoria')
         ->get();
         return response()->json([
             "ok" =>true,

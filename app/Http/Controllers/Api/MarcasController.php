@@ -75,18 +75,7 @@ class MarcasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function mostrarModelosMarca($id_marca)
-    {
-        //Mostrar modelos de una marca
-        $marca = VistaModelo::
-        select('id_modelo','nombre_modelo','fk_marca','nombre_marca')
-        ->where('fk_marca', $id_marca)
-        ->get();
-        return response()->json([
-            "ok" =>true,
-            "data"=>$marca
-        ]);
-    }
+   
 
     /**
      * Show the form for editing the specified resource.

@@ -22,9 +22,17 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'incidencia'       => 'required|integer',
-            'fk_tipo_accion'   => 'required|integer',
-            'fecha_incidencia' => 'required|date',
+            /* 'incidencia'       => 'required|integer', */
+            'fk_tipo_accion'        => 'required|integer',
+            'no_nota'               => 'string|min:11',
+            'fecha_nota'            => 'date',
+            'fk_despacho'           => 'required|integer',
+            'fk_despaho_requerido'  => 'required|integer',
+            'usuario'               => 'required|string',
+            'detalles'              => 'sometimes|array|min:1',
+            'detalles.*.fk_producto'=> 'required|integer',
+            'detalles.*.cantidad_solicitada' => 'required|integer'
+        /*     'fecha_incidencia' => 'required|date',
             'fecha_registro'   => 'nullable|date',
             'fk_despacho'      => 'required|integer',
             'entregado_por'    => 'required|string|max:100',
@@ -34,7 +42,7 @@ class StoreRequest extends FormRequest
             'comentario'       => 'nullable|string|max:300',
             "detalles"         => 'sometimes|array|min:1',
             "detalles.*.fk_producto" => 'required|integer',
-            "detalles.*.cantidad" => 'required|integer'
+            "detalles.*.cantidad" => 'required|integer' */
         ];
     }
 }

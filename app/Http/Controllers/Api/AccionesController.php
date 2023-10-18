@@ -9,6 +9,7 @@ use App\Models\vista_detalles_acciones;
 use Illuminate\Http\Request;
 use App\Http\Requests\Acciones\StoreRequest;
 use App\Models\DetalleAciones;
+use App\Models\TipoAccion;
 use App\Models\vistaAccionesPendientes;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -63,7 +64,71 @@ class AccionesController extends Controller
         //Registrar acciones
         try {
             DB::beginTransaction();
-            $incidencia = strtoupper($request->input('incidencia'));
+            
+            $tipoAccion = strtoupper($request->input('fk_tipo_accion'));
+            if ($tipoAccion == 1) {
+                $numeroNota = strtoupper($request->input('no_nota'));
+                $consulta = Acciones::
+                select('id_accion','no_nota')
+                ->where('no_nota', $numeroNota)->count();
+                if ($consulta > 0) {
+                    return response()->json([
+                        "ok" =>true,
+                        "existe" => 'Ya existe el número de nota '.$numeroNota
+                    ]); 
+                } else {
+                    $acciones = new Acciones();
+                    $acciones->no_nota = $numeroNota;
+                    $acciones->fk_tipo_accion = $request->input('fk_tipo_accion');
+                    $acciones->fecha_registro = Carbon::now();
+                    $acciones->fecha_nota = Carbon::now();
+                    $acciones->fk_despacho_solicitud = $request->input('fk_despacho');
+                    $acciones->fk_despacho_requerido = $request->input('fk_despaho_requerido');
+                    $acciones->comentario = ucfirst($request->input('comentario'));
+                    $acciones->funcionario_solicitud = ucwords($request->input('funcionario_solicitud'));
+                    $acciones->usuario_crea = strtoupper($request->usuario);
+                    $acciones->comentario = ucfirst($request->input('comentario'));
+                    $acciones->titulo_nota = ucwords($request->input('titulo_nota'));
+                    $acciones->estado = 'Pendiente';
+                    $acciones->save();
+                    $items    =  $request->input('detalles');
+                    for ($i=0; $i <count($items) ; $i++) { 
+                        $detalles = new DetalleAciones();
+                        $detalles->fk_accion     = $acciones->id;
+                        $detalles->fk_producto   = $items[$i]['fk_producto'];
+                        $detalles->cantidad_solicitada = $items[$i]['cantidad_solicitada'];
+                        $detalles->cantidad_pendiente  = $detalles->cantidad_solicitada -  $detalles->cantidad_pendiente;
+                        $detalles->cantidad_entrada    = 0;
+                        $detalles->usuario_crea  = $acciones->usuario_crea;
+                        $detalles->estado        = $acciones->estado;
+                        $detalles->save();
+
+                        $detalleAcciones = DetalleAciones::
+                        where('fk_accion', $acciones->id)
+                        ->sum('cantidad_solicitada');
+                        $accion = new Acciones();
+                        $data['cantidad_solicitada'] =  $detalleAcciones;
+                        $data['cantidad_pendiente']  =  $detalleAcciones;
+                        $data['cantidad_llegada']    =  $detalleAcciones - $detalleAcciones;
+                        $accion = Acciones::where('id_accion', $acciones->id)->update($data);
+                    }
+
+                  
+                
+                    DB::commit();
+                    return response()->json([
+                        "ok" =>true,
+                        "data" =>$acciones,
+                        "exitoso" =>'Se guardo satisfactoriamente'
+                    ]);
+                }
+            } else if ($tipoAccion == 2) {
+                # code...
+            } else {
+                return 'No se reconose este formato';
+            }
+            
+            /* $incidencia = strtoupper($request->input('incidencia'));
             $consulta = Acciones::
             select('id_incidencia','incidencia')
             ->where('incidencia', $incidencia)->count();
@@ -104,7 +169,7 @@ class AccionesController extends Controller
                         "exitoso" => 'Se guardo satisfactoriamente',
                     ]);
                 }
-            }
+            } */
             
           
         } catch (\Exception $error) {
@@ -123,6 +188,8 @@ class AccionesController extends Controller
     {
         //
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

@@ -35,7 +35,7 @@ Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
     Route::get('vista_productos_disponibles', [ProductosController::class,'vistaProductosDisponibles']);
     Route::get('contar_acciones_pendientes',[AccionesController::class,'contarAccionesPendientes']);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
-    Route::get('traer_modelos_por_marca/{fk_marca}', [MarcasController::class,'mostrarModelosMarca']);
     Route::post('logout', [UsersController::class,'logout']);
+  
 //});
 

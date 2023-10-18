@@ -52,8 +52,8 @@ class UnidadesMedidasController extends Controller
            ]);
           } else {
             $medidas = new UnidadMedida();
-            $medidas->disposicion  = $unidad_medida;
-            $medidas->usuario_crea = strtoupper($request->input('usuario'));
+            $medidas->unidad_medida  = $unidad_medida;
+            $medidas->usuario_crea   = strtoupper($request->input('usuario'));
             $medidas->save();
             DB::commit();
             return response()->json([
