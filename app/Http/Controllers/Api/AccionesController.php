@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Acciones\StoreRequest;
 use App\Models\DetalleAciones;
 use App\Models\TipoAccion;
+use App\Models\Vista_total_acciones_pendiente;
 use App\Models\vistaAccionesPendientes;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -73,7 +74,6 @@ class AccionesController extends Controller
                 ->where('no_nota', $numeroNota)->count();
                 if ($consulta > 0) {
                     return response()->json([
-                        "ok" =>true,
                         "existe" => 'Ya existe el número de nota '.$numeroNota
                     ]); 
                 } else {
@@ -86,22 +86,22 @@ class AccionesController extends Controller
                     $acciones->fk_despacho_requerido = $request->input('fk_despaho_requerido');
                     $acciones->comentario = ucfirst($request->input('comentario'));
                     $acciones->funcionario_solicitud = ucwords($request->input('funcionario_solicitud'));
-                    $acciones->usuario_crea = strtoupper($request->usuario);
+                    $acciones->usuario_crea = strtoupper($request->input('usuario'));
                     $acciones->comentario = ucfirst($request->input('comentario'));
                     $acciones->titulo_nota = ucwords($request->input('titulo_nota'));
                     $acciones->estado = 'Pendiente';
                     $acciones->save();
-                    $items    =  $request->input('detalles');
+                    $items    =  $request->input('productos');
                     for ($i=0; $i <count($items) ; $i++) { 
-                        $detalles = new DetalleAciones();
-                        $detalles->fk_accion     = $acciones->id;
-                        $detalles->fk_producto   = $items[$i]['fk_producto'];
-                        $detalles->cantidad_solicitada = $items[$i]['cantidad_solicitada'];
-                        $detalles->cantidad_pendiente  = $detalles->cantidad_solicitada -  $detalles->cantidad_pendiente;
-                        $detalles->cantidad_entrada    = 0;
-                        $detalles->usuario_crea  = $acciones->usuario_crea;
-                        $detalles->estado        = $acciones->estado;
-                        $detalles->save();
+                        $productos = new DetalleAciones();
+                        $productos->fk_accion     = $acciones->id;
+                        $productos->fk_producto   = $items[$i]['id_producto'];
+                        $productos->cantidad_solicitada = $items[$i]['cantidad'];
+                        $productos->cantidad_pendiente  = $productos->cantidad_solicitada -  $productos->cantidad_pendiente;
+                        $productos->cantidad_entrada    = 0;
+                        $productos->usuario_crea  = $acciones->usuario_crea;
+                        $productos->estado        = $acciones->estado;
+                        $productos->save();
 
                         $detalleAcciones = DetalleAciones::
                         where('fk_accion', $acciones->id)
@@ -113,8 +113,6 @@ class AccionesController extends Controller
                         $accion = Acciones::where('id_accion', $acciones->id)->update($data);
                     }
 
-                  
-                
                     DB::commit();
                     return response()->json([
                         "ok" =>true,
@@ -127,50 +125,6 @@ class AccionesController extends Controller
             } else {
                 return 'No se reconose este formato';
             }
-            
-            /* $incidencia = strtoupper($request->input('incidencia'));
-            $consulta = Acciones::
-            select('id_incidencia','incidencia')
-            ->where('incidencia', $incidencia)->count();
-            if ($consulta > 0) {
-                return response()->json([
-                    "ok" =>true,
-                    "existe" => 'Ya existe el número de incidencia '.$incidencia
-                   ]);
-            } else {
-                $incidencia = strtoupper($request->input('incidencia'));
-                $acciones = new Acciones();
-                $fecha_incidencia           =  $request->input('fecha_incidencia');
-                $acciones->incidencia       =  $incidencia;
-                $acciones->fk_tipo_accion   = strtoupper($request->input('fk_tipo_accion'));
-                $acciones->fecha_incidencia = Carbon::createFromFormat('Y-m-d', $fecha_incidencia);
-                $acciones->fecha_registro   = Carbon::now();
-                $acciones->fk_despacho      = strtoupper($request->input('fk_despacho'));
-                $acciones->entregado_por    = ucwords($request->input('entregado_por'));
-                $acciones->estado           = 'Pendiente';
-                $acciones->cantidad_total   = 1;
-                $acciones->usuario_crea     = strtoupper($request->input('usuario'));
-                $acciones->comentario       = ucfirst($request->input('comentario'));
-                $acciones->save();
-
-                $items    = $request->input('detalles');
-                $detalles = new DetalleAciones();
-                for ($i=0; $i <count($items) ; $i++) { 
-                    $detalles->fk_accion    = $acciones->id;
-                    $detalles->fk_producto  = $items[$i]['fk_producto'];
-                    $detalles->cantidad     = $items[$i]['cantidad'];
-                    $detalles->estado       = $acciones->estado;
-                    $detalles->usuario_crea = $acciones->usuario_crea;
-                    $detalles->save();
-                    DB::commit();
-                    return response()->json([
-                        "ok" =>true,
-                        "data" =>$acciones,
-                        "exitoso" => 'Se guardo satisfactoriamente',
-                    ]);
-                }
-            } */
-            
           
         } catch (\Exception $error) {
             return response()->json([
@@ -205,14 +159,14 @@ class AccionesController extends Controller
         
     }
 
-    public function contarAccionesPendientes()
+    public function contarAccionesPendientes(Acciones $acciones)
     {
         //Mostrar todas las acciones pendientes por encabezado
         $acciones = vistaAccionesPendientes::all();
         return response()->json([
             "ok" =>true,
             "data" =>$acciones,
-            "total_acciones" =>$acciones->count()
+            "total"=>count($acciones)
         ]);
         
     }
@@ -221,9 +175,13 @@ class AccionesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Acciones $acciones)
+    public function totalAccionesPendiente()
     {
-        //
+        $total = Vista_total_acciones_pendiente::all();
+        return response()->json([
+            "ok" =>true,
+            "data" =>$total[0]->count()
+        ]);
     }
 
     /**

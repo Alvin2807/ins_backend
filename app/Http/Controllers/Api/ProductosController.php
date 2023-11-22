@@ -31,9 +31,19 @@ class ProductosController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function mostrarProductosEntrada()
     {
-        //
+        $producto = vistaProductos::
+        select('id_producto','codigo_producto','producto','nombre_marca','color','estado','categoria',
+        'stock')
+        ->orderBy('id_producto','asc')
+        ->where('estado','Agotado')
+        ->orwhere('estado','Disponible')
+        ->get();
+        return response()->json([
+            "ok" =>true,
+            "data" =>$producto
+        ]);
     }
 
     /**

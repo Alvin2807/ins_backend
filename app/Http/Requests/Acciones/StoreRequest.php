@@ -24,14 +24,14 @@ class StoreRequest extends FormRequest
         return [
             /* 'incidencia'       => 'required|integer', */
             'fk_tipo_accion'        => 'required|integer',
-            'no_nota'               => 'string|min:11',
+            'no_nota'               => 'string|max:11',
             'fecha_nota'            => 'date',
             'fk_despacho'           => 'required|integer',
             'fk_despaho_requerido'  => 'required|integer',
             'usuario'               => 'required|string',
             'detalles'              => 'sometimes|array|min:1',
-            'detalles.*.fk_producto'=> 'required|integer',
-            'detalles.*.cantidad_solicitada' => 'required|integer'
+            'detalles.*.id_producto'=> 'required|integer',
+            'detalles.*.cantidad' => 'required|integer'
         /*     'fecha_incidencia' => 'required|date',
             'fecha_registro'   => 'nullable|date',
             'fk_despacho'      => 'required|integer',

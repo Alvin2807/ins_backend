@@ -35,6 +35,8 @@ Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
     Route::get('vista_productos_disponibles', [ProductosController::class,'vistaProductosDisponibles']);
     Route::get('contar_acciones_pendientes',[AccionesController::class,'contarAccionesPendientes']);
     Route::get('accion/{id_accion}', [AccionesController::class,'acciones_pendientes']);
+    Route::get('total_acciones_pendientes', [AccionesController::class,'totalAccionesPendiente']);
+    Route::get('mostrar_productos_para_entrada',[ProductosController::class,'mostrarProductosEntrada']);
     Route::post('logout', [UsersController::class,'logout']);
   
 //});
