@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Productos;
+namespace App\Http\Requests\Modelos;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,14 +22,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codigo_producto'   => 'string|required',
-            'producto'          => 'string|required|max:100',
-            'fk_categoria'      =>'integer|required',
-            'fk_marca'          =>'integer|required',
-            'fk_unidad_medida'  =>'integer|required',
-            'fk_color' =>'integer|nullable',
-            'fk_impresora' =>'required|integer',
-            'usuario'  =>'string|required|max:30'
+            'id_marca' =>'required|integer',
+            'modelos'  =>'sometimes|array|min:1',
+            'modelos.*.impresora' =>'required|string'
         ];
     }
 }

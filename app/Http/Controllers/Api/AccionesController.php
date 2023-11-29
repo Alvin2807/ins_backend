@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Acciones\StoreRequest;
 use App\Models\DetalleAciones;
 use App\Models\TipoAccion;
+use App\Models\Vista_detalle_acciones_pendientes;
 use App\Models\Vista_total_acciones_pendiente;
 use App\Models\vistaAccionesPendientes;
 use Illuminate\Support\Facades\DB;
@@ -130,7 +131,7 @@ class AccionesController extends Controller
             return response()->json([
                 "ok" =>false,
                 "data" =>$error->getMessage(),
-                "error" =>'Hubo un error consulte con el Administrador del sistema'
+                "errorRegistro" =>'Hubo un error consulte con el Administrador del sistema'
             ]);
         }
     }
@@ -138,9 +139,26 @@ class AccionesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Acciones $acciones)
+    public function mostrarDetallesAccionesPendientes(Acciones $acciones, $id_accion)
     {
-        //
+        //Mostrar la solicitud con sus detalles de productos pendientes
+        $acciones = vistaAccionesPendientes::all()
+        ->where('id_accion', $id_accion)
+        ->where('estado','Pendiente')
+        ->first();
+
+        $detalleAccionesPendiente = Vista_detalle_acciones_pendientes::
+        select('id_detalle_accion','fk_producto','codigo_producto','producto','categoria','nombre_marca','unidad_medida','color','cantidad_solicitada',
+        'cantidad_entrada','cantidad_pendiente','comentario','estado')
+        ->where('fk_accion', $id_accion)
+        ->where('estado', 'Pendiente')
+        ->get();
+
+        $acciones->productos = $detalleAccionesPendiente;
+        return response()->json([
+            "ok" =>true,
+            "data"=>$acciones
+        ]);
     }
 
 

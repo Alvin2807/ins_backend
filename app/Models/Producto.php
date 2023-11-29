@@ -12,7 +12,7 @@ class Producto extends Model
     public    $table       = "ins_productos";
     public    $primarykey  = "id_producto";
     protected $fillable   = ['id_producto','codigo_producto','producto','fk_categoria','fk_marca','fk_modelo',
-    'fk_disposicion','fk_color','stock','estado'
+    'fk_disposicion','fk_color','stock','estado','fk_impresora'
     ];
     public $incrementing = true;
     public $timestamps = false;
@@ -26,7 +26,8 @@ class Producto extends Model
         'fk_disposicion' =>'integer',
         'fk_color' => 'integer',
         'stock' => 'integer',
-        'estado' => 'string'
+        'estado' => 'string',
+        'fk_impresora'=>'integer'
     ];
 
     

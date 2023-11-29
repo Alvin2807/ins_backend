@@ -11,7 +11,7 @@ class vistaProductos extends Model
 
     public $table = "vista_productos";
     protected $fillable = ['id_producto','codigo_producto','fk_marca','fk_unidad_medida','fk_color','stock',
-    'estado','categoria','nombre_marca','unidad_medida','color'
+    'estado','categoria','nombre_marca','unidad_medida','color','impresora','fk_impresora'
     ];
 
     protected $casts = [
@@ -26,6 +26,8 @@ class vistaProductos extends Model
         'color'            => 'string',
         'unidad_medida'    => 'string',
         'nombre_marca'     => 'string',
-        'categoria'        => 'string'
+        'categoria'        => 'string',
+        'impresora'        => 'string',
+        'fk_impresora'     => 'integer'
     ];
 }

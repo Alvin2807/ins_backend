@@ -81,7 +81,8 @@ class UsersController extends Controller
         try {
            DB::beginTransaction();
            $data = $request->validated();
-           $user = User::where('usuario', $data['usuario'])->first();
+           $user = User::
+           where('usuario', $data['usuario'])->first();
    
            if (!$user || !Hash::check($data['password'], $user->password)) {
                return response()->json([

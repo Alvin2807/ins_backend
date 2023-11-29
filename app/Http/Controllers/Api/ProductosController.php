@@ -19,7 +19,7 @@ class ProductosController extends Controller
         //Mostrar productos
         $producto = vistaProductos::
         select('id_producto','codigo_producto','producto','nombre_marca','color','estado','categoria',
-        'stock')
+        'stock','impresora','fk_impresora')
         ->orderBy('id_producto','desc')
         ->get();
         return response()->json([
@@ -35,7 +35,7 @@ class ProductosController extends Controller
     {
         $producto = vistaProductos::
         select('id_producto','codigo_producto','producto','nombre_marca','color','estado','categoria',
-        'stock')
+        'stock','impresora')
         ->orderBy('id_producto','asc')
         ->where('estado','Agotado')
         ->orwhere('estado','Disponible')
@@ -70,6 +70,7 @@ class ProductosController extends Controller
                 $producto->fk_marca         = $request->input('fk_marca');
                 $producto->fk_unidad_medida = $request->input('fk_unidad_medida');
                 $producto->fk_color         = $request->input('fk_color');
+                $producto->fk_impresora     = $request->input('fk_impresora');
                 $producto->stock  = 0;
                 $producto->estado = 'Agotado';
                 $producto->usuario_crea = strtoupper($request->input('usuario'));
