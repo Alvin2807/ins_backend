@@ -24,7 +24,7 @@ class DespachosController extends Controller
     {
         //Mostrar los despachos para realizar una entrada
         $despacho = vista_despachos_entradas::
-        select('id_despacho','despacho','estado')
+        select('id_despacho','despacho','provincia','estado','direccion')
         ->get();
         return response()->json([
             "ok" =>true,

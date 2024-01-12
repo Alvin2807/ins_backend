@@ -97,22 +97,27 @@ class ProductosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Producto $producto)
+    public function mostrarProductosSistema(Producto $producto)
     {
-        //
+        //Muestra si existe regisro de productos en el sistema
+       $producto = vistaProductos::
+       select('id_producto','codigo_producto','producto')
+       ->get()->count();
+       if ($producto == 0) {
+        return response()->json([
+            "ok" =>true,
+            "data" =>$producto,
+            "mensaje" =>'No se puede crear una solicitud de entrada porque no existe ningún producto en el sistema'
+        ]);
+       } else {
+        return response()->json([
+            "ok" =>true,
+            "data"=>$producto
+        ]);
+       }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Producto $producto)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function vistaProductosDisponibles()
     {
         //Muestra los productos en estado disponibles y agotados para realizar una entrada
@@ -125,11 +130,4 @@ class ProductosController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Producto $producto)
-    {
-        //
-    }
 }

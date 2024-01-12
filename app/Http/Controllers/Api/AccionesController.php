@@ -39,7 +39,7 @@ class AccionesController extends Controller
         //Mostrar las solicitudes de acciones pendientes
         $acciones = vista_acciones::
         select('id_accion','incidencia','fecha_incidencia','fecha_registro','entregado_por','estado','cantidad_total',
-        'tipo_accion','despacho')
+        'tipo_accion','despacho','lugar_destino','ciudad_destino')
         ->where('estado','Pendiente')
         ->where('id_accion',$id_accion)
         ->first();
@@ -75,7 +75,7 @@ class AccionesController extends Controller
                 ->where('no_nota', $numeroNota)->count();
                 if ($consulta > 0) {
                     return response()->json([
-                        "existe" => 'Ya existe el número de nota '.$numeroNota
+                        "existe" => 'La nota '.$numeroNota . ' ya existe'
                     ]); 
                 } else {
                     $acciones = new Acciones();
@@ -85,6 +85,8 @@ class AccionesController extends Controller
                     $acciones->fecha_nota = Carbon::now();
                     $acciones->fk_despacho_solicitud = $request->input('fk_despacho');
                     $acciones->fk_despacho_requerido = $request->input('fk_despaho_requerido');
+                    $acciones->lugar_destino = $request->input('lugar_destino');
+                    $acciones->ciudad_destino = $request->input('ciudad_destino');
                     $acciones->comentario = ucfirst($request->input('comentario'));
                     $acciones->funcionario_solicitud = ucwords($request->input('funcionario_solicitud'));
                     $acciones->usuario_crea = strtoupper($request->input('usuario'));
@@ -95,7 +97,8 @@ class AccionesController extends Controller
                     $items    =  $request->input('productos');
                     for ($i=0; $i <count($items) ; $i++) { 
                         $productos = new DetalleAciones();
-                        $productos->fk_accion     = $acciones->id;
+                        $productos->fk_accion = $acciones->id;
+                        $productos->no_item = $items[$i]['no_item'];
                         $productos->fk_producto   = $items[$i]['id_producto'];
                         $productos->cantidad_solicitada = $items[$i]['cantidad'];
                         $productos->cantidad_pendiente  = $productos->cantidad_solicitada -  $productos->cantidad_pendiente;
@@ -149,7 +152,7 @@ class AccionesController extends Controller
 
         $detalleAccionesPendiente = Vista_detalle_acciones_pendientes::
         select('id_detalle_accion','fk_producto','codigo_producto','producto','categoria','nombre_marca','unidad_medida','color','cantidad_solicitada',
-        'cantidad_entrada','cantidad_pendiente','comentario','estado')
+        'cantidad_entrada','cantidad_pendiente','comentario','estado','no_item','impresora')
         ->where('fk_accion', $id_accion)
         ->where('estado', 'Pendiente')
         ->get();
@@ -205,8 +208,19 @@ class AccionesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Acciones $acciones)
+    public function mostrarNotaExiste(Acciones $acciones, Request $request)
     {
-        //
+        //Muestra si existe un número de nota existente
+        $no_nota  = strtoupper($request->input('no_nota'));
+        $id_accion = $request->input('id_accion');
+        $acciones  = Acciones::
+        select('id_accion','no_nota')
+        ->where('no_nota', $no_nota)
+        ->where('id_accion','<>', $id_accion)
+        ->count();
+        return response()->json([
+            'ok'=>true,
+            "data"=>$acciones
+        ]);
     }
 }
