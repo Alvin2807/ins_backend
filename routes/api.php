@@ -30,6 +30,7 @@ Route::post('iniciar_sesion', [UsersController::class,'loginIniciar']);
     Route::apiResource('depositos', DepositosController::class);
     Route::apiResource('pisos', PisosController::class);
     Route::apiResource('unidades_de_medidas', UnidadesMedidasController::class);
+    Route::put('editar_solicitud_entrada', [AccionesController::class, 'EditarAccion']);
     Route::apiResource('modelos',ModelosImpresoraController::class);
     Route::post('mostrar_nota_existe', [AccionesController::class,'mostrarNotaExiste']);
     Route::get('acciones_pendientes', [AccionesController::class,'mostrarAccionesPendientes']);

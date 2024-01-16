@@ -13,6 +13,7 @@ use App\Models\TipoAccion;
 use App\Models\Vista_detalle_acciones_pendientes;
 use App\Models\Vista_total_acciones_pendiente;
 use App\Models\vistaAccionesPendientes;
+use App\Http\Requests\Acciones\EditarRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -90,7 +91,6 @@ class AccionesController extends Controller
                     $acciones->comentario = ucfirst($request->input('comentario'));
                     $acciones->funcionario_solicitud = ucwords($request->input('funcionario_solicitud'));
                     $acciones->usuario_crea = strtoupper($request->input('usuario'));
-                    $acciones->comentario = ucfirst($request->input('comentario'));
                     $acciones->titulo_nota = ucwords($request->input('titulo_nota'));
                     $acciones->estado = 'Pendiente';
                     $acciones->save();
@@ -222,5 +222,91 @@ class AccionesController extends Controller
             'ok'=>true,
             "data"=>$acciones
         ]);
+    }
+
+    public function sumarCantidadSolicitada($id_accion){
+        $total = DetalleAciones::
+        select('fk_accion', 'cantidad_solicitada')
+        ->where('fk_accion', $id_accion)
+        ->sum('cantidad_solicitada');
+        return $total;
+    }
+
+    public function EditarAccion(Acciones $acciones, EditarRequest $request){
+        try {
+            DB::beginTransaction();
+            $id_accion = $request->input('id_accion');
+            $validar = Acciones::
+            select('id_accion', $id_accion)
+            ->where('estado', 'Pendiente')
+            ->count();
+            if ($validar) {
+               $data['no_nota'] = strtoupper($request->input('no_nota'));
+               $data['fk_despacho_requerido'] = $request->input('fk_despaho_requerido');
+               $data['funcionario_solicitud'] = ucwords($request->input('funcionario_solicitud'));
+               $data['lugar_destino'] = $request->input('lugar_destino');
+               $data['ciudad_destino'] = $request->input('ciudad_destino');
+               $data['titulo_nota'] = ucwords($request->input('titulo_nota'));
+               $data['comentario'] = ucfirst($request->input('comentario'));
+               $data['usuario_modifica'] = strtoupper($request->input('usuario'));
+               $data['fecha_modifica'] = Carbon::now();
+               $acciones = Acciones::where('id_accion', $id_accion)->update($data);
+
+               $item = $request->input('productos');
+               for ($i=0; $i <count($item) ; $i++) { 
+                if (isset($item[$i]['id_detalle_accion'])) {
+                    $detalle = new DetalleAciones();
+                    $detalleAcciones['fk_producto'] = $item[$i]['fk_producto'];
+                    $detalleAcciones['cantidad_solicitada'] =  $item[$i]['cantidad_solicitada'];
+                    $detalleAcciones['cantidad_pendiente']  =  $detalleAcciones['cantidad_solicitada'];
+                    $detalleAcciones['usuario_modifica']    =  $data['usuario_modifica'];
+                    $detalleAcciones['fecha_modifica']      = Carbon::now();
+                    $detalle = DetalleAciones::where('id_detalle_accion', $item[$i]['id_detalle_accion'])->update($detalleAcciones);
+                    
+                    $accion = new Acciones();
+                    $accionData['cantidad_solicitada'] = $this->sumarCantidadSolicitada($id_accion);
+                    $accionData['cantidad_pendiente']  =  $accionData['cantidad_solicitada'];
+                    $accionData['cantidad_llegada']    = 0;
+                    $accion = Acciones::where('id_accion', $id_accion)->update($accionData);
+
+                   
+                } else {
+                    $detalleRegistro = new DetalleAciones();
+                    $detalleRegistro->fk_accion   = $id_accion;
+                    $detalleRegistro->fk_producto = $item[$i]['fk_producto'];
+                    $detalleRegistro->no_item     = $item[$i]['no_item'];
+                    $detalleRegistro->cantidad_solicitada = $item[$i]['cantidad_solicitada'];
+                    $detalleRegistro->cantidad_entrada    = 0;
+                    $detalleRegistro->usuario_crea  =  $data['usuario_modifica'];
+                    $detalleRegistro->cantidad_pendiente  = $detalleRegistro->cantidad_solicitada -  $detalleRegistro->cantidad_pendiente;
+                    $detalleRegistro->estado      = 'Pendiente';
+                    $detalleRegistro->save();
+
+                    $accion = new Acciones();
+                    $accionData['cantidad_solicitada'] = $this->sumarCantidadSolicitada($id_accion);
+                    $accionData['cantidad_pendiente']  =  $accionData['cantidad_solicitada'];
+                    $accionData['cantidad_llegada']    = 0;
+                    $accion = Acciones::where('id_accion', $id_accion)->update($accionData);
+                }
+               }
+              
+               DB::commit();
+               return response()->json([
+                "ok" =>true,
+                "data"=>$acciones,
+                "exitoso" =>'Se guardo satisfactoriamente'
+               ]);
+            } else {
+                return 'No se puede editar esta solicitud';
+            }
+        } catch (\Exception $th) {
+            DB::rollBack();
+           return response()->json([
+            "ok" =>false,
+            "data" =>$th->getMessage(),
+            "error"=>'Hubo un error consulte con el Administrador del sistema.'
+           ]);
+
+        }
     }
 }
